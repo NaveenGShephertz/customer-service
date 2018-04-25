@@ -16,17 +16,16 @@ node {
 
         stage('Image') {
             dir ('customer-service') {
-                def app = docker.build "localhost:5000/customer-service:${env.version}"
-                app.push()
+                def app = docker.build "naveengoswami/customer-service:${env.version}"
             }
         }
 
         stage ('Run') {
-            docker.image("localhost:5000/customer-service:${env.version}").run('-p 3333:3333 -h customer --name customer --link discovery --link account')
+            docker.image("naveengoswami/customer-service:${env.version}").run('-p 3333:3333 -h customer --name customer --link discovery --link account')
         }
 
         stage ('Final') {
-            build job: 'gateway-service-pipeline', wait: false
+            build job: 'gateway-service', wait: false
         }      
 
     }
